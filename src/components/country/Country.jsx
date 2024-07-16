@@ -1,42 +1,34 @@
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import axios from "axios";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useSnackbar } from "notistack";
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import axios from 'axios';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useSnackbar } from 'notistack';
+import React, { useState } from 'react'
 import * as Yup from "yup";
-import ShowAllCategory from "./ShowAllCategory";
-import { useState } from "react";
+import ShowAllCountry from './ShowAllCountry';
 
 const initialValues = {
-  title : "",
-  description : "",
-  status : true
-};
+    title : "",
+    description : "",
+    status : true
+  };
+  
+  const validateSchema = Yup.object().shape({
+    title : Yup.string().required("This field is required"),
+    description : Yup.string().required("This field is required"),
+  });
+  
+const Country = () => {
+    const { enqueueSnackbar } = useSnackbar();
 
-const validateSchema = Yup.object().shape({
-  title : Yup.string().required("This field is required"),
-  description : Yup.string().required("This field is required"),
-});
+    const [success,setSuccess] = useState(0);
 
-const Category = () => {
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const [success,setSuccess] = useState(0);
 
   const jwt = sessionStorage.getItem("jwt") || localStorage.getItem("jwt");
   
   const handleOnSubmit = async (values) => {
     await axios({
       method: "POST",
-      url: `${import.meta.env.VITE_API_URL}/api/admin/category`,
+      url: `${import.meta.env.VITE_API_URL}/api/admin/country`,
       headers: {
         "Authorization" : `Bearer ${jwt}`,
         'Content-Type': 'application/json'
@@ -60,12 +52,11 @@ const Category = () => {
     })
   };
 
-  
-
+  console.log(success);
   return (
     <div className="h-auto mt-5">
       <Typography variant="h4" className="text-center">
-        Add New Category
+        Add New Country
       </Typography>
 
       <Formik initialValues={initialValues} onSubmit={handleOnSubmit} validationSchema= {validateSchema}>
@@ -122,15 +113,13 @@ const Category = () => {
 
       <div className="mt-5" >
         <Typography variant="h6" className="pl-4">
-          All Off Category
+          All Off Country
         </Typography>
-        <ShowAllCategory success={success}/>
+        <ShowAllCountry success={success}/>
       </div>
 
     </div>
+  )
+}
 
-    
-  );
-};
-
-export default Category;
+export default Country

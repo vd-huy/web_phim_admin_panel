@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { fetchApiUser } from "../../apis"
 import { getProfile } from "../../redux/userSlice"
+import Footer from "../../components/Footer"
+import { Divider } from "@mui/material"
 
 
 const Home = () => {
@@ -46,10 +48,12 @@ const Home = () => {
       
       {show &&  <Sidebar/>}
       
-      <div style={ show ? {marginLeft:'270px'} : {marginLeft:0}} className="transition-all">
+      <div style={ show ? {marginLeft:'240px'} : {marginLeft:0}} className="transition-all">
         <NavBar handleShowSidebar= {handleShowSidebar}/>
         <AdminRouter/>
-        </div>
+        <Divider />
+        <Footer/>
+      </div>
     </div>
   )
 }

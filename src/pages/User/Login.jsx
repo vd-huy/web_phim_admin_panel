@@ -3,10 +3,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup"
 
 // import React from 'react'
 
@@ -15,6 +16,18 @@ const initialValues = {
   password: "",
   checked: false,
 };
+
+const validateSchema = Yup.object().shape({
+
+  email: Yup.string().email("Please enter a valid email").required("This field is required"),
+
+  password: Yup.string()
+      .required("This field is required")
+      .min(8, "Pasword must be 8 or more characters")
+      .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "Password ahould contain at least one uppercase and lowercase character")
+      .matches(/\d/, "Password should contain at least one number")
+      .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "Password should contain at least one special character"),
+});
 
 const Login = () => {
 
@@ -86,7 +99,7 @@ const Login = () => {
             Login
           </Typography>
 
-          <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
+          <Formik initialValues={initialValues} onSubmit={handleOnSubmit} validationSchema={validateSchema}>
             <Form className="w-[100%] lg:w-[80%]">
               <Field
                 as={TextField}
@@ -99,6 +112,8 @@ const Login = () => {
               {errorField === "email" && (
                 <p className="text-red-500 text-sm my-2">{error}</p>
               )}
+              <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
+
               <Field
                 as={TextField}
                 name="password"
@@ -112,6 +127,7 @@ const Login = () => {
               {errorField === "password" && (
                 <p className="text-red-500 text-sm my-2">{error}</p>
               )}
+              <ErrorMessage name="password" component="div" style={{ color: 'red' }} />
 
               <label>
                 <Field type="checkbox" name="checked" margin="normal" />

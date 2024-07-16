@@ -1,5 +1,4 @@
 import {
-  Box,
   List,
   ListItem,
   ListItemButton,
@@ -8,32 +7,37 @@ import {
 } from "@mui/material";
 import SpeedIcon from "@mui/icons-material/Speed";
 import CategoryIcon from "@mui/icons-material/Category";
+import AppsIcon from '@mui/icons-material/Apps';
+import PublicIcon from '@mui/icons-material/Public';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const Sidebar = ({ open }) => {
+
+const Sidebar = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
+  
+  const [active,setActive] = useState(location.pathname.split("/")[1]);
 
   const handleActive = (text) => {
-    if (text === "Dashboard") {
-      navigate(`/dashboard`);
+    
+    navigate(`/${text.toLowerCase()}`);
+    window.scrollTo({
+            top: 0,
+            behavior: "smooth", // Adds smooth scrolling effect
+          });
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // Adds smooth scrolling effect
-      });
-    } else {
-      navigate(`/${text.toLowerCase()}`);
-    }
+    setActive(text.toLowerCase())
   };
   return (
-    <div className="lg:w-[260px] h-[100vh] shadow-lg fixed top-0 bottom-0 left-0 lg:block transition-all">
+    <div className="lg:w-[230px] h-[100%] shadow-lg fixed top-0 bottom-0 left-0 lg:block transition-all bg-white">
       <List>
         <ListItem sx={{ justifyContent: "center", alignItems: "center" }}>
           HuyEndy
         </ListItem>
-        {["Dashboard", "Category"].map((text, index) => (
+        {["Dashboard", "Category","Country","Genre","Movie"].map((text, index) => (
           <ListItem
             key={text}
             disablePadding
@@ -41,7 +45,7 @@ const Sidebar = ({ open }) => {
               handleActive(text);
             }}
             sx={
-              location.pathname === `/${text.toLowerCase()}` && {
+              active === text.toLocaleLowerCase() && {
                 bgcolor: "#e6f4ff",
               }
             }
@@ -49,7 +53,7 @@ const Sidebar = ({ open }) => {
             <ListItemButton>
               <ListItemIcon
                 sx={
-                  location.pathname === `/${text.toLowerCase()}` && {
+                  active === text.toLocaleLowerCase() && {
                     color: "rgb(22, 119, 255);",
                   }
                 }
@@ -59,15 +63,17 @@ const Sidebar = ({ open }) => {
                 ) : index === 1 ? (
                   <CategoryIcon />
                 ) : index === 2 ? (
-                  <SpeedIcon />
+                  <PublicIcon />
+                ) : index === 3 ? (
+                  <AppsIcon />
                 ) : (
-                  index === 3 && <SpeedIcon />
+                  index === 4 && <LiveTvIcon />
                 )}
               </ListItemIcon>
               <ListItemText
                 primary={text}
                 sx={
-                  location.pathname === `/${text.toLowerCase()}` && {
+                  active === text.toLocaleLowerCase()&& {
                     color: "rgb(22, 119, 255);",
                   }
                 }

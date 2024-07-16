@@ -1,33 +1,32 @@
 import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import axios from "axios";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useSnackbar } from "notistack";
-import * as Yup from "yup";
-import ShowAllCategory from "./ShowAllCategory";
-import { useState } from "react";
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+  } from "@mui/material";
+  import axios from "axios";
+  import { ErrorMessage, Field, Form, Formik } from "formik";
+  import { useSnackbar } from "notistack";
+  import * as Yup from "yup";
+  import ShowAllGenre from "./ShowAllGenre";
+  import { useState } from "react";
+  
+  const initialValues = {
+    title : "",
+    description : "",
+    status : true
+  };
+  
+  const validateSchema = Yup.object().shape({
+    title : Yup.string().required("This field is required"),
+    description : Yup.string().required("This field is required"),
+  });
+const Genre = () => {
 
-const initialValues = {
-  title : "",
-  description : "",
-  status : true
-};
-
-const validateSchema = Yup.object().shape({
-  title : Yup.string().required("This field is required"),
-  description : Yup.string().required("This field is required"),
-});
-
-const Category = () => {
-
-  const { enqueueSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
   const [success,setSuccess] = useState(0);
 
@@ -36,7 +35,7 @@ const Category = () => {
   const handleOnSubmit = async (values) => {
     await axios({
       method: "POST",
-      url: `${import.meta.env.VITE_API_URL}/api/admin/category`,
+      url: `${import.meta.env.VITE_API_URL}/api/admin/genre`,
       headers: {
         "Authorization" : `Bearer ${jwt}`,
         'Content-Type': 'application/json'
@@ -48,7 +47,7 @@ const Category = () => {
       },
     }).then(() =>{
     
-        enqueueSnackbar('Add a new category is successfully!', { variant:"success" });
+        enqueueSnackbar('Add a new genre is successfully!', { variant:"success" });
         values.title = "";
         values.description = "";
         values.status = true;
@@ -60,12 +59,10 @@ const Category = () => {
     })
   };
 
-  
-
   return (
     <div className="h-auto mt-5">
       <Typography variant="h4" className="text-center">
-        Add New Category
+        Add New Genre
       </Typography>
 
       <Formik initialValues={initialValues} onSubmit={handleOnSubmit} validationSchema= {validateSchema}>
@@ -124,13 +121,11 @@ const Category = () => {
         <Typography variant="h6" className="pl-4">
           All Off Category
         </Typography>
-        <ShowAllCategory success={success}/>
+        <ShowAllGenre success={success}/>
       </div>
 
     </div>
+  )
+}
 
-    
-  );
-};
-
-export default Category;
+export default Genre
