@@ -59,3 +59,12 @@ export const fetchTotalUser = async (jwt) =>{
       })
         return response;
 }
+
+export const fetchAllIngredient = async (title)=>{
+    const response =await axios({
+      method: "GET",
+      url: `${import.meta.env.VITE_API_URL}/api/${title}/all`,
+      headers:{}
+    })
+      return response;
+  }

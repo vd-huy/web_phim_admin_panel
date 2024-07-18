@@ -20,8 +20,6 @@ const LineChart = () => {
     })
   },[jwt])
 
-  console.log(dataDetail);
-
   const data = {
     labels: dataDetail.map(data=> "Tháng " + data.month),
     datasets: [

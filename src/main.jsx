@@ -12,8 +12,8 @@ import { SnackbarProvider } from "notistack";
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { index: true, element: <Home /> },
-  { path: "/*", element: <Home /> },
   { path: "/account/login", element: <Login /> },
+  { path: "/*", element: <Home /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

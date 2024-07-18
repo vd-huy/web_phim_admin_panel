@@ -130,7 +130,7 @@ const ShowAllCategory = ({success}) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataRow.map((row, index) => {
+            {dataRow?.map((row, index) => {
               return (
                 <TableRow key={index} hover role="checkbox" tabIndex={-1}>
                   {columns.map((column) => {

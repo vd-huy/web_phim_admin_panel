@@ -1,78 +1,104 @@
-import { Autocomplete, Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as Yup from "yup";
 
 import FormikAutocomplete from './FormikAutocomplete';
-
-const data = [
-    { title: 'Movie 1', id: 1 },
-    { title: 'Movie 2', id: 2 },
-    { title: 'Movie 3', id: 3 },
-    // Add your options here
-  ];
+import { useSelector } from 'react-redux';
 
 const initialValues = {
-    title : "",
-    description : "",
-    status : true,
-    image : "",
-    year : new Date().getFullYear(),
-    time : "",
-    categories:[],
-    country:"",
-    genres:[]
-  };
-  
-  const validateSchema = Yup.object().shape({
-    title : Yup.string().required("This field is required"),
-    description : Yup.string().required("This field is required"),
-    image : Yup.string().required("This field is required"),
-    year : Yup.number()
-                .required("Year is required")
-                .min(1900, "Year must be greater than or equal to 1900")
-                .max(new Date().getFullYear(), `Year must be less than or equal to ${new Date().getFullYear()}`),
-    time : Yup.number().required("Time is required")
-                        .min(0,"time must be greater 0"),
+  title: "",
+  originName: "",
+  description: "",
+  status: true,
+  image: "",
+  year: "",
+  time: "",
+  categories: [],
+  countries: [],
+  genres: []
+};
 
-    categories : Yup.array().required("Provide at least one tag")
-                            .min(1,"You must be Choose at least 1 "),
-    genres : Yup.array().required("Provide at least one tag")
-                        .min(1,"You must be Choose at least 1 ")
-  });
+const validateSchema = Yup.object().shape({
+  title: Yup.string().required("This field is required"),
+  originName: Yup.string().required("This field is required"),
+  description: Yup.string().required("This field is required"),
+  image: Yup.string().required("This field is required"),
+  year: Yup.number()
+    .required("Year is required")
+    .min(1900, "Year must be greater than or equal to 1900")
+    .max(new Date().getFullYear(), `Year must be less than or equal to ${new Date().getFullYear()}`),
+  time: Yup.number().required("Time is required")
+    .min(0, "time must be greater 0"),
+
+  categories: Yup.array().required("Provide at least one tag")
+    .min(1, "You must be Choose at least 1 "),
+  genres: Yup.array().required("Provide at least one tag")
+    .min(1, "You must be Choose at least 1 "),
+  countries: Yup.array().required("Provide at least one tag")
+    .min(1, "You must be Choose at least 1 "),
+});
 
 const AddMovie = () => {
 
-    const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const jwt = sessionStorage.getItem("jwt") || localStorage.getItem("jwt");
-  
-  const handleOnSubmit = async (values) => {
-    // await axios({
-    //   method: "POST",
-    //   url: `${import.meta.env.VITE_API_URL}/api/admin/movie`,
-    //   headers: {
-    //     "Authorization" : `Bearer ${jwt}`,
-    //     'Content-Type': 'application/json'
-    //   },
-    //   data: {
-    //     title : values.title,
-    //     description : values.description,
-    //     status : values.status
-    //   },
-    // }).then(() =>{
-    
-    //     enqueueSnackbar('Add a new movie is successfully!', { variant:"success" });
-    //     values.title = "";
-    //     values.description = "";
-    //     values.status = true;
-    
-    // }).catch(error=>{
-    //   console.log(error);
-    // })
 
-    console.log(values);
+  const dataCategory = useSelector(state => state.category.categoryList);
+
+  const dataCountry = useSelector(state => state.country.countryList);
+
+  const dataGenre = useSelector(state => state.genre.genreList);
+
+  const handleOnSubmit = async (values,{resetForm }) => {
+
+    const categoryIds = [];
+    const genreIds = [];
+    const countryIds = [];
+
+    values.categories.map(category=>{
+      categoryIds.push(category.id)
+    })
+
+    values.countries.map(country=>{
+      countryIds.push(country.id)
+    })
+
+    values.genres.map(genre=>{
+      genreIds.push(genre.id)
+    })
+
+
+    await axios({
+      method: "POST",
+      url: `${import.meta.env.VITE_API_URL}/api/admin/movie`,
+      headers: {
+        "Authorization" : `Bearer ${jwt}`,
+        'Content-Type': 'application/json'
+      },
+      data: {
+        title : values.title,
+        originName : values.originName,
+        description : values.description,
+        status : values.status,
+        image: values.image,
+        year: values.year,
+        time: values.time,
+        categoryIds: categoryIds,
+        countryIds: countryIds,
+        genreIds: genreIds
+      },
+    }).then(() =>{
+
+        enqueueSnackbar('Add a new movie is successfully!', { variant:"success" });
+      
+        resetForm();
+
+    }).catch(error=>{
+      console.log(error);
+    })
   };
 
   return (
@@ -87,7 +113,7 @@ const AddMovie = () => {
         validationSchema={validateSchema}
       >
         <Form className="w-[90%] m-auto mb-4">
-          <div className="flex justify-between gap-8">
+          <Box sx={{ display:"flex", justifyContent:"space-between", gap:"2rem" }}>
             <Field
               as={TextField}
               name="title"
@@ -95,12 +121,24 @@ const AddMovie = () => {
               variant="outlined"
               margin="normal"
               size="small"
-              className="w-1/2 inline-block mr-4"
+              fullWidth
+              className="inline-block mr-4"
               padding="unset"
-              //   InputProps={{ style: { height: '30px' , fontSize:"12px"} }}
             />
 
-            <FormControl className="w-1/2 inline-block" margin="normal">
+            <Field
+              as={TextField}
+              name="originName"
+              label="Origin Name"
+              variant="outlined"
+              margin="normal"
+              size="small"
+              fullWidth
+              className="inline-block mr-4"
+              padding="unset"
+            />
+
+            <FormControl className="w-full inline-block" margin="normal">
               <InputLabel id="select-label">Status</InputLabel>
               <Field
                 as={Select}
@@ -114,7 +152,7 @@ const AddMovie = () => {
                 <MenuItem value={false}>Không hiển thị </MenuItem>
               </Field>
             </FormControl>
-          </div>
+          </Box>
 
           <ErrorMessage name="title" component="div" style={{ color: "red" }} />
 
@@ -144,58 +182,61 @@ const AddMovie = () => {
           />
           <ErrorMessage name="image" component="div" style={{ color: "red" }} />
 
-          <Field
-            as={TextField}
-            name="year"
-            label="Year of release"
-            fullWidth
-            size="small"
-            variant="outlined"
-            margin="normal"
-          />
-          <ErrorMessage name="image" component="div" style={{ color: "red" }} />
+          <Box sx={{ display:"flex", justifyContent:"space-between", gap:"2rem" }}>
+            <Box sx={{ width:"50%" }}>
+              <Field
+                as={TextField}
+                name="year"
+                label="Year of release"
+                fullWidth
+                size="small"
+                variant="outlined"
+                margin="normal"
+              />
+              <ErrorMessage name="year" component="div" style={{ color: "red" }} />
+            </Box>
 
-          <Field
-            as={TextField}
-            name="time"
-            label="Time duration of the movie"
-            fullWidth
-            size="small"
-            variant="outlined"
-            margin="normal"
-          />
-          <ErrorMessage name="time" component="div" style={{ color: "red" }} />
+            <Box  sx={{ width:"50%" }}>
+              <Field
+                as={TextField}
+                name="time"
+                label="Time duration of the movie"
+                fullWidth
+                size="small"
+                variant="outlined"
+                margin="normal"
+              />
+              <ErrorMessage name="time" component="div" style={{ color: "red" }} />
+            </Box>
+          </Box>
 
-          <div className="w-full flex justify-between gap-8 ">
             <FormikAutocomplete
-              options={data}
+              options={dataCategory}
               name="categories"
               label="Select categories"
               placeholder="Categories"
+            
             />
 
             <FormikAutocomplete
-              options={data}
+              options={dataGenre}
               name="genres"
               label="Select genres"
               placeholder="Genres"
+              
             />
 
-<Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      name="country"
-      options={data}
-      size="small"
-      sx={{ width: '20%' }}
-      getOptionLabel={(option) => option.title}
-      renderInput={(params) => <TextField {...params} label="Country" />}
-    />
+            <FormikAutocomplete
+                options={dataCountry}
+                name="countries"
+                label="Select Countries"
+                placeholder="Countries"
+                
+              />
 
-            
-          </div>
+          
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
             <Button
               sx={{
                 padding: "1rem",
@@ -216,4 +257,4 @@ const AddMovie = () => {
   );
 }
 
-export default AddMovie
+export default AddMovie;

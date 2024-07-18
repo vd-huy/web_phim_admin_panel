@@ -52,7 +52,6 @@ const Country = () => {
     })
   };
 
-  console.log(success);
   return (
     <div className="h-auto mt-5">
       <Typography variant="h4" className="text-center">

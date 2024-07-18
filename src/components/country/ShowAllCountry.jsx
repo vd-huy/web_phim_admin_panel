@@ -48,8 +48,6 @@ const ShowAllCountry = ({success}) => {
     );
   }, [jwt, title, direction, page, rowsPerPage,success]);
 
-  console.log(success);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -123,7 +121,7 @@ const ShowAllCountry = ({success}) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataRow.map((row, index) => {
+            {dataRow?.map((row, index) => {
               return (
                 <TableRow key={index} hover role="checkbox" tabIndex={-1}>
                   {columns.map((column) => {

@@ -8,6 +8,7 @@ import Genre from "../components/genre/Genre";
 import UpdateGenre from "../components/genre/UpdateGenre";
 import Movie from "../components/movie/Movie";
 import AddMovie from "../components/movie/AddMovie";
+import UpdateMovie from "../components/movie/UpdateMovie";
 
 
 const AdminRouter = () => {
@@ -22,8 +23,9 @@ const AdminRouter = () => {
           <Route path="/country" element={<Country />} />
           <Route path="/genre/update/:id" element={<UpdateGenre />} />
           <Route path="/genre" element={<Genre />} />
-          <Route path="/movie" element={<Movie />} />
+          <Route path="/movie/update/:id" element={<UpdateMovie />} />
           <Route path="/movie/add-new" element={<AddMovie />} />
+          <Route path="/movie" element={<Movie />} />
       </Routes>
     </div>
   );

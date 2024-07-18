@@ -2,7 +2,6 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { SnackbarProvider } from "notistack";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);

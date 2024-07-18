@@ -24,9 +24,6 @@ const Dashboard = () => {
           fetchCountUserRegisterToDay(jwt,now),
           fetchTotalUser(jwt)
         ]);
-
-        console.log(countUserNewResponse, totalUserResponse);
-
         if (countUserNewResponse.data.length === 0) {
           setCountUserNew(0)
         }else{
