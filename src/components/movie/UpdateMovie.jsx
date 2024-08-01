@@ -1,9 +1,11 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from "yup";
+import Episode from '../episode/Episode';
+import ShowEpisode from '../episode/ShowEpisode';
 
 
 const validateSchema = Yup.object().shape({
@@ -196,6 +198,14 @@ const UpdateMovie = () => {
             </Box>
           </Form>
         </Formik>
+
+        <Divider />
+
+        {/* <Episode/> */}
+
+        <ShowEpisode/>
+
+        
       </div>
     );
 }

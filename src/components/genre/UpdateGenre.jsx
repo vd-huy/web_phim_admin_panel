@@ -4,6 +4,8 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { enqueueSnackbar } from 'notistack';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from "yup";
+import Episode from '../episode/Episode';
+import ShowEpisode from '../episode/ShowEpisode';
 
 const UpdateGenre = () => {
 
@@ -112,6 +114,10 @@ const UpdateGenre = () => {
           </Button>
         </Form>
       </Formik>
+
+      <Episode/>
+
+      {/* <ShowEpisode/> */}
     </div>
   )
 }
